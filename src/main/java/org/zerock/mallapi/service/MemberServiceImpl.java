@@ -1,8 +1,10 @@
 package org.zerock.mallapi.service;
 
 import java.util.LinkedHashMap;
-
 import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,8 +16,10 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.zerock.mallapi.domain.Member;
 import org.zerock.mallapi.domain.MemberRole;
+import org.zerock.mallapi.domain.Todo;
 import org.zerock.mallapi.dto.MemberDTO;
 import org.zerock.mallapi.dto.MemberModifyDTO;
+import org.zerock.mallapi.dto.TodoDTO;
 import org.zerock.mallapi.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -117,4 +121,15 @@ public class MemberServiceImpl implements MemberService {
 
     memberRepository.save(member);
   }
+
+  @Override
+  public String register(MemberDTO memberDTO) {
+    Member member = Member.builder().email(memberDTO.getEmail()).pw(passwordEncoder.encode(memberDTO.getPw()))
+        .nickname(memberDTO.getNickname()).social(false)
+        .build();
+    member.addRole(MemberRole.USER);
+    Member savedMember = memberRepository.save(member);
+    return savedMember.getEmail();
+  }
+
 }

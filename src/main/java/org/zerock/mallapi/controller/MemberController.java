@@ -14,12 +14,22 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @Log4j2
 @RequiredArgsConstructor
-public class SocialController {
+public class MemberController {
   private final MemberService memberService;
+
+  @PostMapping("/api/member/join")
+  public Map<String, String> register(@RequestBody MemberDTO memberDTO) {
+    log.info("MemberDTO: " + memberDTO);
+    String email = memberService.register(memberDTO);
+
+    return Map.of("email", email);
+  }
 
   @GetMapping("/api/member/kakao")
   public Map<String, Object> getMemberFromKakao(String accessToken) {
